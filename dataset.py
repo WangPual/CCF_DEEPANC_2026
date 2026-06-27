@@ -136,16 +136,6 @@ class PreconvolutedANCDataset(Dataset):
         if len(seg_raw) < self.segment_length:
             seg_raw = np.pad(seg_raw, (0, self.segment_length - len(seg_raw)), 'constant')
                 
-        # =====================================================================
-        # Robust Relative Amplitude Normalization
-        # =====================================================================
-        # Establish the absolute peak of the raw reference noise as the anchor.
-        # Scaling both the raw and expected signals identically restricts the 
-        # network input feature range to [-1, 1] while strictly preserving 
-        # the acoustic physical attenuation ratio (Gain Ratio).
-        norm_factor = np.max(np.abs(seg_raw)) + 1e-8
-        seg_exp = seg_exp / norm_factor
-        seg_raw = seg_raw / norm_factor
 
         return torch.tensor(seg_raw, dtype=torch.float32), \
                torch.tensor(sh, dtype=torch.float32), \
